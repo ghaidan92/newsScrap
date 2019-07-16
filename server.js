@@ -12,6 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+var exphbs = require('express-handlebars');
+app.engine("handlebars", exphbs({
+    defaultLayout: "main"
+}));
+
+
+app.set("view engine", "handlebars");
+
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/webScrape', { useNewUrlParser: true });
 
 // create a scrape route
@@ -45,6 +53,18 @@ app.get("/all", function (req, res) {
         .find()
         .then(function (data) {
             res.json(data);
+        });
+});
+
+app.get("/saved", function (req, res) {
+    Article
+        .find({"saved": true})
+        // .populate("notes")
+        .then(function (data) {
+           var aljObject = {
+                article: data
+           }
+           res.render("saved", aljObject)
         });
 });
 

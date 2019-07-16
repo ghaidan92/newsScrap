@@ -5,7 +5,7 @@ $(document).ready(function () {
             
             $(".table tbody").empty();
             for(var i = 0; i < data.length; i++) {
-                $(".table tbody").append(`<tr><td>${data[i].title}</td><td class="link-text"><a href="${data[i].link}">Link to article</a></td><td class="save-link"><a href="${data[i].favorite}">Save article</a></td>tr>`);
+                $(".table tbody").append(`<tr><td>${data[i].title}</td><td class="link-text"><a href="${data[i].link}">Link to article</a></td><td class="save-link"><a href="${data[i]._id}">Save article</a></td>tr>`);
             }
         });
     }
@@ -34,13 +34,17 @@ $(document).ready(function () {
         window.location.replace("/")
     });
     $(".save-link").on("click", function(e){
-        e.preventDefault();
-        console.log("saved link")
-        $.postJSON("/saved", function(data){
-            console.log(data)
-            if(data) {
-                getAllData();
-            }
-        })
+        var thisId = $(this).attr("data-id");
+
+        $.ajax({
+            method: "POST",
+            url: "/saved/" + thisId,
+            
+        }).done(function(data){
+    
+            
+                // window.location = "/saved"
+            
+        });
     });
 });
